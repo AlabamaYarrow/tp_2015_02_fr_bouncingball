@@ -6,9 +6,10 @@ var context = canvas.getContext('2d');
 
 var startTime, animationTime, length, direction;
 
-var V01 = 0, V0 = 0; //px per second
+var V01, V0 = 0; //px per second
 var V = 0; //px per second
 var g = 500; //px per second per second
+
 
 var img = new Image();
 img.src = 'rainbow.jpg';
@@ -49,7 +50,6 @@ function startAnimation() {
   canvas.removeEventListener('click', checkPosition);
   startTime = new Date().getTime(); 
   if (direction == 'down') {	
-	 V0 = 0;
 	 animate(); 
   }
   else {	  	 
@@ -65,8 +65,8 @@ function animate () {
   var time = new Date().getTime();
   var shiftTime = time - startTime;
   
-  V = V0 + 0.001 * shiftTime * g; //px per second
-  y = y0 + V0 * (0.001 * shiftTime) + 0.5*g*Math.pow(0.001 * shiftTime, 2);
+  V = 0.001 * shiftTime * g; //px per second
+  y = y0 + 0.5*g*Math.pow(0.001 * shiftTime, 2);
   
   if (y > canvas.height - radius) {
   	y = canvas.height - radius;
@@ -74,8 +74,7 @@ function animate () {
   	startTime = new Date().getTime();
   	y0 = y; 
   	V0 = V * 0.7;
-  	if ( V0 < 50) {	
-		console.log(V0 + ' ' + V);
+  	if ( V0 < 50) {		
   		direction = 'up';
   		y0 = (canvas.height - radius - context.lineWidth / 2); 
   		canvas.addEventListener('click', checkPosition);
@@ -98,21 +97,10 @@ function animateUp () {
   V = V0 - (shiftTime * 0.001) * g;
   y = y0 - V0 * (0.001 * shiftTime) + 0.5*g*Math.pow(0.001 * shiftTime, 2);
   
-  if (y < radius) {
-  	y = radius;
-  	drawCirle(x,y);	 
-  	startTime = new Date().getTime();
-  	y0 = y; 
-  	V0 = V * 0.7;  	
-  	animate();
-  	return;
-  }
-  
   if (V < 0) {
   	drawCirle(x,y);
   	startTime = new Date().getTime();
   	y0 = y;
-	V0 = 0;
   	animate();
   	return;	
   }    
